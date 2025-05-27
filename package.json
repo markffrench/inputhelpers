@@ -1,0 +1,26 @@
+{
+    "name": "com.markffrench.inputhelpers",
+    "version": "1.0.0",
+    "displayName": "Input Helpers",
+    "description": "A utility package to help with Unity Remote testing by managing input system interactions between mouse and touch inputs.",
+    "unity": "6000.0",
+    "dependencies": {
+        "com.unity.inputsystem": "1.12.0"
+    },
+    "keywords": [
+        "input",
+        "remote",
+        "testing",
+        "unity remote"
+    ],
+    "author": {
+        "name": "Mark Ffrench",
+        "email": "markaffrench@gmail.com",
+        "url": "https://markffrench.com"
+    },
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/markffrench/InputHelpers.git"
+    }
+} 
