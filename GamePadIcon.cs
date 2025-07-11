@@ -4,7 +4,7 @@ using System;
 
 namespace InputHelpers
 {
-    [RequireComponent(typeof(TextMeshPro))]
+    [RequireComponent(typeof(TMP_Text))]
     public class GamePadIcon : MonoBehaviour
     {
         [Header("Action Selection")]
@@ -32,7 +32,9 @@ namespace InputHelpers
                 
             if (gamepadSpriteAsset == null)
                 throw new InvalidOperationException("Gamepad Sprite Asset is null");
-                
+
+            textMeshPro.spriteAsset = gamepadSpriteAsset;
+            
             string spriteName = GetSpriteNameForAction(selectedAction)+"_0";
             //doing things this way because TMP is weird, it uses one hash code when generating the lookup table,
             //and another when looking up a sprite name
