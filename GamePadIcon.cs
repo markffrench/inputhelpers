@@ -13,11 +13,11 @@ namespace InputHelpers
         [Header("Sprite Asset")]
         [SerializeField] private TMP_SpriteAsset gamepadSpriteAsset;
         
-        private TextMeshPro textMeshPro;
+        private TMP_Text textMeshPro;
         
         private void Awake()
         {
-            textMeshPro = GetComponent<TextMeshPro>();
+            textMeshPro = GetComponent<TMP_Text>();
         }
         
         private void Start()
@@ -33,8 +33,12 @@ namespace InputHelpers
             if (gamepadSpriteAsset == null)
                 throw new InvalidOperationException("Gamepad Sprite Asset is null");
                 
-            string spriteName = GetSpriteNameForAction(selectedAction);
-            int spriteIndex = gamepadSpriteAsset.GetSpriteIndexFromName(spriteName);
+            string spriteName = GetSpriteNameForAction(selectedAction)+"_0";
+            //doing things this way because TMP is weird, it uses one hash code when generating the lookup table,
+            //and another when looking up a sprite name
+            //fixed in 6000.2: https://issuetracker.unity3d.com/issues/sprite-index-cannot-be-found-when-using-the-getspriteindexfromname-method
+            int hashCode = TMP_TextUtilities.GetHashCode(spriteName);
+            int spriteIndex = gamepadSpriteAsset.GetSpriteIndexFromHashcode(hashCode);
             
             if (spriteIndex != -1)
             {

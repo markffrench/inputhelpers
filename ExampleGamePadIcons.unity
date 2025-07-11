@@ -450,7 +450,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   selectedAction: 0
-  gamepadSpriteAsset: {fileID: 0}
+  gamepadSpriteAsset: {fileID: 11400000, guid: 4edc4d4c33410704784cd07176df95bb, type: 2}
 --- !u!1 &2090943850
 GameObject:
   m_ObjectHideFlags: 0
