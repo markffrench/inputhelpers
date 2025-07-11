@@ -42,7 +42,13 @@ namespace InputHelpers
             
             if (spriteIndex != -1)
             {
-                textMeshPro.text = $"<sprite index={spriteIndex}>";
+                if(textMeshPro.text.Contains("{"+selectedAction+"}"))
+                    textMeshPro.text = textMeshPro.text.Replace("{"+selectedAction+"}", $"<sprite index={spriteIndex}>");
+                else
+                {
+                    throw new InvalidOperationException(
+                        $"Button text does not contain matching prompt: {textMeshPro.text} vs {selectedAction}");
+                }
             }
             else
             {
