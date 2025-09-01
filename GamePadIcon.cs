@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro;
 using System;
+using Framework.Input;
 using UnityEngine.InputSystem;
 
 namespace InputHelpers
@@ -29,15 +30,36 @@ namespace InputHelpers
             
             // Subscribe to sprite asset changes
             GamePadSpriteRepository.Instance.OnSpriteAssetChanged += OnSpriteAssetChanged;
-            UpdateIcon(GamePadSpriteRepository.Instance.GetCurrentSpriteAsset());
+            
+            // Subscribe to control scheme changes
+            ControlSchemeSwapper.OnChanged += OnControlSchemeChanged;
+            
+            OnControlSchemeChanged(ControlSchemeSwapper.currentControlScheme);
         }
         
         private void OnDestroy()
         {
-            // Unsubscribe from events
             if (GamePadSpriteRepository.Instance != null)
             {
                 GamePadSpriteRepository.Instance.OnSpriteAssetChanged -= OnSpriteAssetChanged;
+            }
+            
+            ControlSchemeSwapper.OnChanged -= OnControlSchemeChanged;
+        }
+        
+        private void OnControlSchemeChanged(ControlScheme controlScheme)
+        {
+            if (controlScheme == ControlScheme.Gamepad)
+            {
+                UpdateIcon(GamePadSpriteRepository.Instance.GetCurrentSpriteAsset());
+            }
+            else
+            {
+                // Hide gamepad icon by restoring original text
+                if (textMeshPro != null)
+                {
+                    textMeshPro.text = originalText.Replace("{"+selectedActionName+"}", "").Trim();
+                }
             }
         }
         
