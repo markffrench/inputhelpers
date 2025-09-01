@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro;
 using System;
+using System.Linq;
 using Framework.Input;
 using UnityEngine.InputSystem;
 
@@ -112,55 +113,50 @@ namespace InputHelpers
                 InputAction action = inputActionAsset.FindAction(actionName);
                 if (action != null)
                 {
-                    // Get the binding path to determine the control type
-                    var binding = action.bindings[0]; // Use first binding as default
-                    string path = binding.path;
+                    foreach (InputBinding binding in action.bindings)
+                    {
+                        string path = binding.path;
                     
-                    // Map common input paths to sprite names
-                    if (path.Contains("/buttonSouth") || path.Contains("/buttonA"))
-                        return "btn_a";
-                    if (path.Contains("/buttonNorth") || path.Contains("/buttonY"))
-                        return "btn_y";
-                    if (path.Contains("/buttonWest") || path.Contains("/buttonX"))
-                        return "btn_x";
-                    if (path.Contains("/buttonEast") || path.Contains("/buttonB"))
-                        return "btn_b";
-                    if (path.Contains("/dpad/up"))
-                        return "dpad_up";
-                    if (path.Contains("/dpad/down"))
-                        return "dpad_down";
-                    if (path.Contains("/dpad/left"))
-                        return "dpad_left";
-                    if (path.Contains("/dpad/right"))
-                        return "dpad_right";
-                    if (path.Contains("/leftStick"))
-                        return "lstick";
-                    if (path.Contains("/rightStick"))
-                        return "rstick";
-                    if (path.Contains("/start"))
-                        return "btn_start";
-                    if (path.Contains("/select") || path.Contains("/back"))
-                        return "btn_back";
+                        string spriteName = GetSpriteNameForActionPath(path);
+
+                        if (!string.IsNullOrEmpty(spriteName))
+                            return spriteName;
+                    }
                 }
             }
             
-            // Fallback mapping based on action name
-            return actionName.ToLower() switch
-            {
-                "back" or "cancel" => "btn_b",
-                "confirm" or "submit" or "interact" => "btn_a",
-                "undo" or "secondary" => "btn_y",
-                "toggleeditmode" or "tertiary" => "btn_x",
-                "cursormove" or "move" => "lstick",
-                "nudgeup" or "up" => "dpad_up",
-                "nudgedown" or "down" => "dpad_down",
-                "nudgeleft" or "left" => "dpad_left",
-                "nudgeright" or "right" => "dpad_right",
-                "hint" or "help" => "btn_start",
-                "tap" or "click" => "btn_a",
-                "tapandhold" or "hold" => "btn_a",
-                _ => "btn_a"
-            };
+            Debug.LogError("No sprite found for action: " + actionName);
+            return "btn_a";
+        }
+
+        private string GetSpriteNameForActionPath(string path)
+        {
+            if (path.EndsWith("/buttonSouth") || path.EndsWith("/buttonA"))
+                return "btn_a";
+            if (path.EndsWith("/buttonNorth") || path.EndsWith("/buttonY"))
+                return "btn_y";
+            if (path.EndsWith("/buttonWest") || path.EndsWith("/buttonX"))
+                return "btn_x";
+            if (path.EndsWith("/buttonEast") || path.EndsWith("/buttonB"))
+                return "btn_b";
+            if (path.EndsWith("/dpad/up"))
+                return "dpad_up";
+            if (path.EndsWith("/dpad/down"))
+                return "dpad_down";
+            if (path.EndsWith("/dpad/left"))
+                return "dpad_left";
+            if (path.EndsWith("/dpad/right"))
+                return "dpad_right";
+            if (path.EndsWith("/leftStick"))
+                return "lstick";
+            if (path.EndsWith("/rightStick"))
+                return "rstick";
+            if (path.EndsWith("/start"))
+                return "start";
+            if (path.EndsWith("/select") || path.EndsWith("/back"))
+                return "select";
+
+            return string.Empty;
         }
     }
 } 
