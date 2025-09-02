@@ -18,6 +18,7 @@ namespace InputHelpers
         
         private TMP_Text textMeshPro;
         private string originalText;
+        private string modifiedText;
         
         private void Awake()
         {
@@ -34,7 +35,7 @@ namespace InputHelpers
             
             // Subscribe to control scheme changes
             ControlSchemeSwapper.OnChanged += OnControlSchemeChanged;
-            
+           
             OnControlSchemeChanged(ControlSchemeSwapper.currentControlScheme);
         }
         
@@ -59,7 +60,8 @@ namespace InputHelpers
                 // Hide gamepad icon by restoring original text
                 if (textMeshPro != null)
                 {
-                    textMeshPro.text = originalText.Replace("{"+selectedActionName+"}", "").Trim();
+                    modifiedText = originalText.Replace("{"+selectedActionName+"}", "").Trim();
+                    textMeshPro.text = modifiedText;
                 }
             }
         }
@@ -157,6 +159,17 @@ namespace InputHelpers
                 return "select";
 
             return string.Empty;
+        }
+
+        private void Update()
+        {
+            if (textMeshPro.text != modifiedText)
+            {
+                //language changed, update text
+                originalText = textMeshPro.text;
+                Debug.Log($"Language changed, updating text {modifiedText} -> {originalText}");
+                OnControlSchemeChanged(ControlSchemeSwapper.currentControlScheme);
+            }
         }
     }
 } 
