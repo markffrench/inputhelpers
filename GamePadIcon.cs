@@ -52,7 +52,7 @@ namespace InputHelpers
         
         private void OnControlSchemeChanged(ControlScheme controlScheme)
         {
-            if (controlScheme == ControlScheme.Gamepad)
+            if (controlScheme is ControlScheme.Gamepad or ControlScheme.SteamDeck)
             {
                 UpdateIcon(GamePadSpriteRepository.Instance.GetCurrentSpriteAsset());
             }

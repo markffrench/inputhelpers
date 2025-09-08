@@ -13,6 +13,15 @@ namespace InputHelpers
 
         public static ControlScheme currentControlScheme = ControlScheme.KeyboardAndMouse;
 
+        public void SetSteamDeck(bool isSteamDeck)
+        {
+            if (isSteamDeck)
+            {
+                currentControlScheme = ControlScheme.SteamDeck;
+                OnChanged?.Invoke(currentControlScheme);
+            }
+        }
+        
         private void Awake()
         {
             controls = new SwapControlSchemeInput();
@@ -35,6 +44,9 @@ namespace InputHelpers
 
         public void OnSwitchToGamepad(InputAction.CallbackContext context)
         {
+            if(currentControlScheme == ControlScheme.SteamDeck)
+                return;
+            
             if (Defines.IsGamePadSupported() && currentControlScheme != ControlScheme.Gamepad)
             {
                 Debug.Log("Gamepad in control!");
@@ -45,6 +57,9 @@ namespace InputHelpers
 
         public void OnSwitchToKBM(InputAction.CallbackContext context)
         {
+            if(currentControlScheme == ControlScheme.SteamDeck)
+                return;
+            
             if (currentControlScheme != ControlScheme.KeyboardAndMouse)
             {
                 Debug.Log("Keyboard+Mouse in control!");
@@ -55,6 +70,9 @@ namespace InputHelpers
 
         public void OnSwitchToTouch(InputAction.CallbackContext context)
         {
+            if(currentControlScheme == ControlScheme.SteamDeck)
+                return;
+            
             if (Defines.IsTouchScreenSupported() && currentControlScheme != ControlScheme.Touch)
             {
                 Debug.Log("Touchscreen in control!");
@@ -71,6 +89,7 @@ namespace Framework.Input
     {
         KeyboardAndMouse,
         Gamepad,
-        Touch
+        Touch,
+        SteamDeck
     }
 }
