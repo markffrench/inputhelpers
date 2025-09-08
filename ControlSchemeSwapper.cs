@@ -1,5 +1,6 @@
 using System;
 using Framework.Input;
+using Helpers;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -17,6 +18,13 @@ namespace InputHelpers
             controls = new SwapControlSchemeInput();
             controls.Enable();
             controls.Switch.AddCallbacks(this);
+            
+            if(Defines.IsGamePadSupported())
+                currentControlScheme = ControlScheme.Gamepad;
+            else if (Defines.IsTouchScreenSupported())
+                currentControlScheme = ControlScheme.Touch;
+            else
+                currentControlScheme = ControlScheme.KeyboardAndMouse;
         }
 
         private void OnDestroy()
@@ -27,7 +35,7 @@ namespace InputHelpers
 
         public void OnSwitchToGamepad(InputAction.CallbackContext context)
         {
-            if (currentControlScheme != ControlScheme.Gamepad)
+            if (Defines.IsGamePadSupported() && currentControlScheme != ControlScheme.Gamepad)
             {
                 Debug.Log("Gamepad in control!");
                 currentControlScheme = ControlScheme.Gamepad;
@@ -47,7 +55,7 @@ namespace InputHelpers
 
         public void OnSwitchToTouch(InputAction.CallbackContext context)
         {
-            if (currentControlScheme != ControlScheme.Touch)
+            if (Defines.IsTouchScreenSupported() && currentControlScheme != ControlScheme.Touch)
             {
                 Debug.Log("Touchscreen in control!");
                 currentControlScheme = ControlScheme.Touch;

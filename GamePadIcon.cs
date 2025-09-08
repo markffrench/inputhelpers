@@ -3,6 +3,7 @@ using TMPro;
 using System;
 using System.Linq;
 using Framework.Input;
+using I2.Loc;
 using UnityEngine.InputSystem;
 
 namespace InputHelpers
@@ -17,24 +18,25 @@ namespace InputHelpers
         [SerializeField] private string selectedActionName = "Back";
         
         private TMP_Text textMeshPro;
-        private string originalText;
+        private LocalizationParamsManager localizationParamsManager;
         
         private void Awake()
         {
             textMeshPro = GetComponent<TMP_Text>();
+            localizationParamsManager = GetComponent<LocalizationParamsManager>();
+
+            if (localizationParamsManager == null)
+                localizationParamsManager = gameObject.AddComponent<LocalizationParamsManager>();
         }
         
         private void Start()
         {
-            // Store the original text
-            originalText = textMeshPro.text;
-            
             // Subscribe to sprite asset changes
             GamePadSpriteRepository.Instance.OnSpriteAssetChanged += OnSpriteAssetChanged;
             
             // Subscribe to control scheme changes
             ControlSchemeSwapper.OnChanged += OnControlSchemeChanged;
-            
+           
             OnControlSchemeChanged(ControlSchemeSwapper.currentControlScheme);
         }
         
@@ -59,7 +61,7 @@ namespace InputHelpers
                 // Hide gamepad icon by restoring original text
                 if (textMeshPro != null)
                 {
-                    textMeshPro.text = originalText.Replace("{"+selectedActionName+"}", "").Trim();
+                    localizationParamsManager.SetParameterValue(selectedActionName, String.Empty);
                 }
             }
         }
@@ -91,13 +93,8 @@ namespace InputHelpers
             
             if (spriteIndex != -1)
             {
-                if(originalText.Contains("{"+selectedActionName+"}"))
-                    textMeshPro.text = originalText.Replace("{"+selectedActionName+"}", $"<sprite index={spriteIndex}>");
-                else
-                {
-                    throw new InvalidOperationException(
-                        $"Button text does not contain matching prompt: {originalText} vs {selectedActionName}");
-                }
+                string spriteMarkup = $"<sprite index={spriteIndex}>";
+                localizationParamsManager.SetParameterValue(selectedActionName, spriteMarkup);
             }
             else
             {
